@@ -1,0 +1,109 @@
+send_raw:
+  name: Send raw command
+  description: Send an ASCII command to the heat pump and log the response.
+  fields:
+    command:
+      name: Command
+      description: "e.g. '1100', '3405'. CRLF is appended automatically."
+      required: true
+      selector:
+        text:
+
+set_heating_curve:
+  name: Set heating curve
+  description: Patch one or more fields of the heating curve. Omitted fields keep their current value.
+  fields:
+    heating_offset:
+      name: Return-setpoint offset
+      description: Abweichung Rücklauf Soll in °C.
+      required: false
+      selector:
+        number:
+          min: -10
+          max: 10
+          step: 0.1
+          unit_of_measurement: "°C"
+    heating_endpoint:
+      name: Heating curve endpoint
+      description: Endpunkt in °C.
+      required: false
+      selector:
+        number:
+          min: 20
+          max: 60
+          step: 0.5
+          unit_of_measurement: "°C"
+    heating_parallel:
+      name: Parallel shift
+      description: Parallelverschiebung in °C.
+      required: false
+      selector:
+        number:
+          min: -10
+          max: 10
+          step: 0.1
+          unit_of_measurement: "°C"
+    night_setback:
+      name: Night setback
+      description: Nachtabsenkung in °C.
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 10
+          step: 0.5
+          unit_of_measurement: "°C"
+
+set_hysteresis:
+  name: Set hysteresis
+  description: Patch the heating or DHW hysteresis (or both).
+  fields:
+    hysteresis_heating:
+      name: Heating hysteresis
+      description: Heating hysteresis in °C.
+      required: false
+      selector:
+        number:
+          min: 0.5
+          max: 10
+          step: 0.1
+          unit_of_measurement: "°C"
+    hysteresis_dhw:
+      name: DHW hysteresis
+      description: DHW hysteresis in °C.
+      required: false
+      selector:
+        number:
+          min: 0.5
+          max: 10
+          step: 0.1
+          unit_of_measurement: "°C"
+
+set_bw_schedule:
+  name: Set DHW weekly schedule
+  description: Set the two daily DHW time windows.
+  fields:
+    start1:
+      name: Window 1 start
+      description: Start time window 1 (HH:MM).
+      required: true
+      selector:
+        text:
+    end1:
+      name: Window 1 end
+      description: End time window 1 (HH:MM).
+      required: true
+      selector:
+        text:
+    start2:
+      name: Window 2 start
+      description: Start time window 2 (HH:MM).
+      required: false
+      selector:
+        text:
+    end2:
+      name: Window 2 end
+      description: End time window 2 (HH:MM).
+      required: false
+      selector:
+        text:

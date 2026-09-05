@@ -1,0 +1,168 @@
+{
+    "title": "Luxtronik 1 Heat Pump",
+    "config": {
+        "step": {
+            "user": {
+                "title": "Connect to Luxtronik 1 heat pump",
+                "description": "Pick the serial port the AlphaInnotec/Siemens Luxtronik 1 controller is attached to. Default settings are 57600 8N1.",
+                "data": {
+                    "serial_port": "Serial port",
+                    "baudrate": "Baud rate",
+                    "parity": "Parity",
+                    "stopbits": "Stop bits"
+                }
+            },
+            "reconfigure": {
+                "title": "Change serial connection",
+                "description": "Update the serial port the Luxtronik 1 controller is attached to. The connection is tested before saving.",
+                "data": {
+                    "serial_port": "Serial port",
+                    "baudrate": "Baud rate",
+                    "parity": "Parity",
+                    "stopbits": "Stop bits"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "Unable to talk to the heat pump. Check the cable, the RS232 adapter and that no other tool is holding the port.",
+            "unknown": "Unexpected error."
+        },
+        "abort": {
+            "already_configured": "This serial port is already configured."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Luxtronik 1 options",
+                "description": "Read-only mode strictly separates reading from writing: when enabled, no command that could change the controller is sent, and all controls are hidden.",
+                "data": {
+                    "scan_interval": "Polling interval (seconds)",
+                    "read_only": "Read-only mode (block all writes)"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "outdoor_temperature": { "name": "Outdoor temperature" },
+            "flow_temperature": { "name": "Flow temperature" },
+            "return_temperature": { "name": "Return temperature" },
+            "return_setpoint": { "name": "Return setpoint" },
+            "hot_gas_temperature": { "name": "Hot gas temperature" },
+            "dhw_temperature": { "name": "DHW temperature" },
+            "source_in_temperature": { "name": "Source in temperature" },
+            "source_out_temperature": { "name": "Source out temperature" },
+            "mix1_flow_actual": { "name": "Mixing circuit 1 flow actual" },
+            "mix1_flow_setpoint": { "name": "Mixing circuit 1 flow setpoint" },
+            "dhw_setpoint": { "name": "DHW setpoint" },
+            "operating_state": { "name": "Operating state" },
+            "compressor_hours": { "name": "Compressor hours" },
+            "compressor_starts": { "name": "Compressor starts" },
+            "software_version": { "name": "Software version" },
+            "heat_pump_type": { "name": "Heat pump type" },
+            "bivalent_stage": { "name": "Bivalent stage" },
+            "runtime_wp_current": { "name": "Current heat pump run time" },
+            "current_run_compressor1": { "name": "Compressor 1 run time" }
+        },
+        "binary_sensor": {
+            "compressor_1": { "name": "Compressor 1" },
+            "compressor_2": { "name": "Compressor 2" },
+            "heating_pump": { "name": "Heating pump" },
+            "dhw_pump": { "name": "DHW pump" },
+            "defrost_valve": { "name": "Defrost valve" },
+            "brine_pump": { "name": "Brine pump" },
+            "evu_lock": { "name": "EVU lockout" },
+            "high_pressure": { "name": "High pressure" },
+            "low_pressure": { "name": "Low pressure" },
+            "motor_protection": { "name": "Motor protection" }
+        },
+        "climate": {
+            "heating": { "name": "Heating" }
+        },
+        "water_heater": {
+            "hot_water": { "name": "Hot water" }
+        }
+    },
+    "exceptions": {
+        "read_only_mode": {
+            "message": "Read-only mode is enabled: writing to the heat pump controller is blocked. Disable read-only mode in the integration options to allow writes."
+        },
+        "command_contains_newline": {
+            "message": "Command must not contain CR/LF; CRLF is appended automatically."
+        },
+        "invalid_time_format": {
+            "message": "Invalid time {value}; expected HH:MM with hour 0-23 and minute 0-59."
+        }
+    },
+    "services": {
+        "send_raw": {
+            "name": "Send raw command",
+            "description": "Send an ASCII command to the heat pump and log the response. The command must be a 4-digit code without the trailing CRLF.",
+            "fields": {
+                "command": {
+                    "name": "Command",
+                    "description": "e.g. '1100', '3405', '3501;1;500'"
+                }
+            }
+        },
+        "set_heating_curve": {
+            "name": "Set heating curve",
+            "description": "Patch one or more fields of the heating curve. Omitted fields keep their current value.",
+            "fields": {
+                "heating_offset": {
+                    "name": "Return-setpoint offset",
+                    "description": "Abweichung Rücklauf Soll in °C"
+                },
+                "heating_endpoint": {
+                    "name": "Heating curve endpoint",
+                    "description": "Endpunkt in °C"
+                },
+                "heating_parallel": {
+                    "name": "Parallel shift",
+                    "description": "Parallelverschiebung in °C"
+                },
+                "night_setback": {
+                    "name": "Night setback",
+                    "description": "Nachtabsenkung in °C"
+                }
+            }
+        },
+        "set_hysteresis": {
+            "name": "Set hysteresis",
+            "description": "Patch the heating or DHW hysteresis (or both).",
+            "fields": {
+                "hysteresis_heating": {
+                    "name": "Heating hysteresis",
+                    "description": "Heating hysteresis in °C"
+                },
+                "hysteresis_dhw": {
+                    "name": "DHW hysteresis",
+                    "description": "DHW hysteresis in °C"
+                }
+            }
+        },
+        "set_bw_schedule": {
+            "name": "Set DHW weekly schedule",
+            "description": "Set the two daily DHW time windows.",
+            "fields": {
+                "start1": {
+                    "name": "Window 1 start",
+                    "description": "Start time window 1 (HH:MM)"
+                },
+                "end1": {
+                    "name": "Window 1 end",
+                    "description": "End time window 1 (HH:MM)"
+                },
+                "start2": {
+                    "name": "Window 2 start",
+                    "description": "Start time window 2 (HH:MM)"
+                },
+                "end2": {
+                    "name": "Window 2 end",
+                    "description": "End time window 2 (HH:MM)"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "services": {
+        "send_raw": {
+            "service": "mdi:console"
+        },
+        "set_heating_curve": {
+            "service": "mdi:chart-bell-curve"
+        },
+        "set_hysteresis": {
+            "service": "mdi:delta"
+        },
+        "set_bw_schedule": {
+            "service": "mdi:calendar-clock"
+        }
+    }
+}

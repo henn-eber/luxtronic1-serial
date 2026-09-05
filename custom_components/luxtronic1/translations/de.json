@@ -1,0 +1,164 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Mit Luxtronik 1 verbinden",
+                "description": "Wähle den seriellen Port, an dem der AlphaInnotec/Siemens Luxtronik 1 Regler angeschlossen ist. Standard: 57600 8N1.",
+                "data": {
+                    "serial_port": "Serieller Port",
+                    "baudrate": "Baudrate",
+                    "parity": "Parität",
+                    "stopbits": "Stoppbits"
+                }
+            },
+            "reconfigure": {
+                "title": "Serielle Verbindung ändern",
+                "description": "Aktualisiere den seriellen Port des Luxtronik 1 Reglers. Die Verbindung wird vor dem Speichern geprüft.",
+                "data": {
+                    "serial_port": "Serieller Port",
+                    "baudrate": "Baudrate",
+                    "parity": "Parität",
+                    "stopbits": "Stoppbits"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "Kommunikation mit der Wärmepumpe nicht möglich. Prüfe Kabel, RS232-Adapter und ob ein anderes Tool den Port hält.",
+            "unknown": "Unerwarteter Fehler."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Luxtronik 1 Optionen",
+                "description": "Der Nur-Lesen-Modus trennt Lesen und Schreiben strikt: Wenn aktiv, wird kein Befehl gesendet, der den Regler verändern könnte, und alle Bedienelemente werden ausgeblendet.",
+                "data": {
+                    "scan_interval": "Abfrageintervall (Sekunden)",
+                    "read_only": "Nur-Lesen-Modus (alle Schreibzugriffe blockieren)"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "outdoor_temperature": { "name": "Außentemperatur" },
+            "flow_temperature": { "name": "Vorlauftemperatur" },
+            "return_temperature": { "name": "Rücklauftemperatur" },
+            "return_setpoint": { "name": "Rücklauf-Soll" },
+            "hot_gas_temperature": { "name": "Heißgastemperatur" },
+            "dhw_temperature": { "name": "Brauchwassertemperatur" },
+            "source_in_temperature": { "name": "Wärmequelle Eintritt" },
+            "source_out_temperature": { "name": "Wärmequelle Austritt" },
+            "mix1_flow_actual": { "name": "Mischkreis 1 Vorlauf Ist" },
+            "mix1_flow_setpoint": { "name": "Mischkreis 1 Vorlauf Soll" },
+            "dhw_setpoint": { "name": "Brauchwasser-Soll" },
+            "operating_state": { "name": "Betriebszustand" },
+            "compressor_hours": { "name": "Verdichterstunden" },
+            "compressor_starts": { "name": "Verdichterstarts" },
+            "software_version": { "name": "Softwareversion" },
+            "heat_pump_type": { "name": "Wärmepumpentyp" },
+            "bivalent_stage": { "name": "Bivalenzstufe" },
+            "runtime_wp_current": { "name": "Aktuelle Wärmepumpen-Laufzeit" },
+            "current_run_compressor1": { "name": "Verdichter 1 Laufzeit" }
+        },
+        "binary_sensor": {
+            "compressor_1": { "name": "Verdichter 1" },
+            "compressor_2": { "name": "Verdichter 2" },
+            "heating_pump": { "name": "Heizungsumwälzpumpe" },
+            "dhw_pump": { "name": "Brauchwasserpumpe" },
+            "defrost_valve": { "name": "Abtauventil" },
+            "brine_pump": { "name": "Solepumpe" },
+            "evu_lock": { "name": "EVU-Sperre" },
+            "high_pressure": { "name": "Hochdruck" },
+            "low_pressure": { "name": "Niederdruck" },
+            "motor_protection": { "name": "Motorschutz" }
+        },
+        "climate": {
+            "heating": { "name": "Heizung" }
+        },
+        "water_heater": {
+            "hot_water": { "name": "Warmwasser" }
+        }
+    },
+    "exceptions": {
+        "read_only_mode": {
+            "message": "Nur-Lesen-Modus ist aktiv: Schreiben auf den Wärmepumpenregler ist blockiert. Deaktiviere den Nur-Lesen-Modus in den Integrationsoptionen, um Schreiben zu erlauben."
+        },
+        "command_contains_newline": {
+            "message": "Der Befehl darf kein CR/LF enthalten; CRLF wird automatisch angehängt."
+        },
+        "invalid_time_format": {
+            "message": "Ungültige Zeit {value}; erwartet HH:MM mit Stunde 0-23 und Minute 0-59."
+        }
+    },
+    "services": {
+        "send_raw": {
+            "name": "Rohbefehl senden",
+            "description": "Sendet einen ASCII-Befehl an die Wärmepumpe und protokolliert die Antwort.",
+            "fields": {
+                "command": {
+                    "name": "Befehl",
+                    "description": "z.B. '1100', '3405', '3501;1;500'"
+                }
+            }
+        },
+        "set_heating_curve": {
+            "name": "Heizkurve setzen",
+            "description": "Ändert einzelne Felder der Heizkurve. Leere Felder behalten ihren Wert.",
+            "fields": {
+                "heating_offset": {
+                    "name": "Abweichung Rücklauf Soll",
+                    "description": "Abweichung Rücklauf Soll in °C"
+                },
+                "heating_endpoint": {
+                    "name": "Heizkurven-Endpunkt",
+                    "description": "Endpunkt in °C"
+                },
+                "heating_parallel": {
+                    "name": "Parallelverschiebung",
+                    "description": "Parallelverschiebung in °C"
+                },
+                "night_setback": {
+                    "name": "Nachtabsenkung",
+                    "description": "Nachtabsenkung in °C"
+                }
+            }
+        },
+        "set_hysteresis": {
+            "name": "Hysterese setzen",
+            "description": "Ändert die Heizungs- und/oder Brauchwasser-Hysterese.",
+            "fields": {
+                "hysteresis_heating": {
+                    "name": "Heizungs-Hysterese",
+                    "description": "Heizungs-Hysterese in °C"
+                },
+                "hysteresis_dhw": {
+                    "name": "Brauchwasser-Hysterese",
+                    "description": "Brauchwasser-Hysterese in °C"
+                }
+            }
+        },
+        "set_bw_schedule": {
+            "name": "Brauchwasser-Zeitplan setzen",
+            "description": "Setzt die zwei täglichen Brauchwasser-Zeitfenster.",
+            "fields": {
+                "start1": {
+                    "name": "Fenster 1 Start",
+                    "description": "Start Zeitfenster 1 (HH:MM)"
+                },
+                "end1": {
+                    "name": "Fenster 1 Ende",
+                    "description": "Ende Zeitfenster 1 (HH:MM)"
+                },
+                "start2": {
+                    "name": "Fenster 2 Start",
+                    "description": "Start Zeitfenster 2 (HH:MM)"
+                },
+                "end2": {
+                    "name": "Fenster 2 Ende",
+                    "description": "Ende Zeitfenster 2 (HH:MM)"
+                }
+            }
+        }
+    }
+}
