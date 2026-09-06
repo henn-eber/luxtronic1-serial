@@ -28,7 +28,7 @@ except ImportError:  # pragma: no cover - pyserial-asyncio missing in dev env
     serial_asyncio = None  # type: ignore[assignment]
 
 from .const import CRLF, DEFAULT_BAUDRATE, DEFAULT_BYTESIZE, DEFAULT_PARITY, DEFAULT_STOPBITS
-from .protocol import FrameError, decode_line, line_terminator_993
+from .protocol import FrameError, decode_line, has_error_marker, line_terminator_993
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -205,6 +205,12 @@ class LuxtronikTransport:
             chunks += 1
             buffer.extend(chunk)
 
+            if has_error_marker(bytes(buffer)):
+                await self._recover_from_desync_locked()
+                raise LuxtronikConnectionError(
+                    f"Controller reported 779 (desynced) for {command}"
+                )
+
             lines = [ln for ln in buffer.split(CRLF) if ln]
             for raw in lines:
                 try:
@@ -257,6 +263,11 @@ class LuxtronikTransport:
         if abort_token is not None and abort_token.is_set():
             await self._abort_locked(cancel)
             return
+        if await self._peek_for_desync_locked():
+            await self._abort_locked(cancel)
+            raise LuxtronikConnectionError(
+                f"Controller reported 779 (desynced) during {command} write"
+            )
 
         try:
             self._writer.write(payload)
@@ -269,6 +280,11 @@ class LuxtronikTransport:
         if abort_token is not None and abort_token.is_set():
             await self._abort_locked(cancel)
             return
+        if await self._peek_for_desync_locked():
+            await self._abort_locked(cancel)
+            raise LuxtronikConnectionError(
+                f"Controller reported 779 (desynced) during {command} write"
+            )
 
         try:
             self._writer.write(commit)
@@ -295,6 +311,36 @@ class LuxtronikTransport:
             await self._writer.drain()
         except Exception:  # pragma: no cover - best-effort
             pass
+
+    async def _peek_for_desync_locked(self) -> bool:
+        """Return True if the controller has signalled ``779`` in the read buffer.
+
+        Called between write frames so we can abort a desynced write session
+        early instead of waiting for the final commit to fail.
+        """
+        if self._reader is None:
+            return False
+        try:
+            chunk = await asyncio.wait_for(self._reader.read(256), timeout=0.05)
+        except asyncio.TimeoutError:
+            return False
+        if not chunk:
+            return False
+        return has_error_marker(chunk)
+
+    async def _recover_from_desync_locked(self) -> None:
+        """Try to clear a desynced session after a ``779`` response.
+
+        The protocol mandates writing ``<CMD>;0\\r\\n`` followed by
+        ``999\\r\\n``. We don't know which command the controller is
+        waiting for, so we send ``0;0\\r\\n`` as a universal abort
+        (command=0, count=0) followed by ``999\\r\\n`` — the same
+        fallback the ioBroker adapter uses for this situation. After the
+        abort we close the port so the next request starts on a fresh
+        connection.
+        """
+        await self._abort_locked(b"0;0\r\n")
+        await self._close_locked()
 
     async def _await_commit(self, abort_token: Optional[asyncio.Event]) -> None:
         assert self._reader is not None
