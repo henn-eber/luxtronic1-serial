@@ -50,7 +50,6 @@ READ_COMMANDS: Final = frozenset(
         "3400",  # heating curve
         "3405",  # heating mode
         "3505",  # hot water mode
-        "2700",  # clock (read)
     }
 )
 
@@ -69,7 +68,6 @@ CMD_BW_SCHEDULE: Final = "3200"
 CMD_HEATING_CURVE: Final = "3400"
 CMD_HEATING_MODE: Final = "3405"
 CMD_HOTWATER_MODE: Final = "3505"
-CMD_CLOCK_READ: Final = "2700"  # not used by ioBroker adapter; included for completeness
 
 # ----- Write command codes ---------------------------------------------------
 CMD_BW_SETPOINT_WRITE: Final = "3501"  # hot water setpoint
@@ -78,7 +76,6 @@ CMD_HOTWATER_MODE_WRITE: Final = "3506"
 CMD_HEATING_CURVE_WRITE: Final = "3401"
 CMD_HYSTERESIS_WRITE: Final = "2101"
 CMD_BW_SCHEDULE_WRITE: Final = "3201"
-CMD_CLOCK_WRITE: Final = "2701"
 
 # ----- Mode values -----------------------------------------------------------
 # From ioBroker adapter:
@@ -106,6 +103,19 @@ HOTWATER_MODES: Final = {
     MODE_HOLIDAY: "Holiday",
     MODE_OFF: "Off",
     MODE_OFF_ALT: "Off",
+}
+
+# Climate preset modes (HA climate entity). AUTO and OFF are exposed as
+# HVAC modes, the rest as preset modes the user can pick.
+HEATING_PRESETS: Final = (
+    "backup_heater",
+    "party",
+    "holiday",
+)
+HEATING_PRESET_TO_MODE: Final = {
+    "backup_heater": MODE_ZWE,
+    "party": MODE_PARTY,
+    "holiday": MODE_HOLIDAY,
 }
 
 # ----- Operating status (ANL status) -----------------------------------------

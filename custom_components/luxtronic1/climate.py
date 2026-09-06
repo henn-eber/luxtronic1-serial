@@ -21,9 +21,13 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .client import LuxtronikReadOnlyError
 from .const import (
     HEATING_MODES,
+    HEATING_PRESET_TO_MODE,
+    HEATING_PRESETS,
     HOTWATER_MODES,
     MODE_AUTO,
+    MODE_HOLIDAY,
     MODE_OFF,
+    MODE_PARTY,
     MODE_ZWE,
 )
 from .coordinator import LuxtronikCoordinator
@@ -31,8 +35,6 @@ from .device import device_info, unique_id
 
 _LOGGER = logging.getLogger(__name__)
 
-# The controller is a single serial line: serialize HA-level updates
-# and service calls as well (the transport locks too).
 PARALLEL_UPDATES = 1
 
 
@@ -52,6 +54,7 @@ class LuxtronikClimate(CoordinatorEntity[LuxtronikCoordinator], ClimateEntity):
     _attr_translation_key = "heating"
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_hvac_modes = [HVACMode.AUTO, HVACMode.OFF, HVACMode.HEAT]
+    _attr_preset_modes = list(HEATING_PRESETS)
 
     def __init__(
         self, coordinator: LuxtronikCoordinator, entry: ConfigEntry
@@ -69,6 +72,7 @@ class LuxtronikClimate(CoordinatorEntity[LuxtronikCoordinator], ClimateEntity):
             ClimateEntityFeature.TARGET_TEMPERATURE
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
+            | ClimateEntityFeature.PRESET_MODE
         )
 
     @property
@@ -89,11 +93,20 @@ class LuxtronikClimate(CoordinatorEntity[LuxtronikCoordinator], ClimateEntity):
         return HVACMode.HEAT
 
     @property
+    def preset_mode(self) -> str | None:
+        """Return the active Luxtronik heating preset (or None for AUTO/OFF)."""
+        mode = self.coordinator.heating_mode
+        if mode in (MODE_AUTO, MODE_OFF):
+            return None
+        for preset, mapped in HEATING_PRESET_TO_MODE.items():
+            if mapped == mode:
+                return preset
+        return None
+
+    @property
     def hvac_action(self) -> HVACAction:
         if self.coordinator.overview.outputs.any_compressor_running:
             return HVACAction.HEATING
-        if self.coordinator.overview.status.anl_status_text == "Hot water":
-            return HVACAction.IDLE
         return HVACAction.IDLE
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
@@ -108,6 +121,18 @@ class LuxtronikClimate(CoordinatorEntity[LuxtronikCoordinator], ClimateEntity):
             raise HomeAssistantError(str(exc)) from exc
         except Exception:  # pragma: no cover
             _LOGGER.exception("Failed to set heating mode")
+        await self.coordinator.async_request_refresh()
+
+    async def async_set_preset_mode(self, preset_mode: str) -> None:
+        target_mode = HEATING_PRESET_TO_MODE.get(preset_mode)
+        if target_mode is None:
+            raise ValueError(f"Unknown heating preset: {preset_mode}")
+        try:
+            await self.coordinator.client.set_heating_mode(target_mode)
+        except LuxtronikReadOnlyError as exc:
+            raise HomeAssistantError(str(exc)) from exc
+        except Exception:  # pragma: no cover
+            _LOGGER.exception("Failed to set heating preset")
         await self.coordinator.async_request_refresh()
 
     async def async_turn_on(self) -> None:

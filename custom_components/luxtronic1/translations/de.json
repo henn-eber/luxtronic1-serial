@@ -25,6 +25,9 @@
         "error": {
             "cannot_connect": "Kommunikation mit der Wärmepumpe nicht möglich. Prüfe Kabel, RS232-Adapter und ob ein anderes Tool den Port hält.",
             "unknown": "Unerwarteter Fehler."
+        },
+        "abort": {
+            "already_configured": "Dieser serielle Port ist bereits konfiguriert."
         }
     },
     "options": {
@@ -53,13 +56,14 @@
             "mix1_flow_setpoint": { "name": "Mischkreis 1 Vorlauf Soll" },
             "dhw_setpoint": { "name": "Brauchwasser-Soll" },
             "operating_state": { "name": "Betriebszustand" },
-            "compressor_hours": { "name": "Verdichterstunden" },
+            "heat_pump_total_hours": { "name": "Wärmepumpen-Gesamtstunden" },
+            "compressor_1_hours": { "name": "Verdichter 1 Stunden" },
+            "compressor_2_hours": { "name": "Verdichter 2 Stunden" },
             "compressor_starts": { "name": "Verdichterstarts" },
             "software_version": { "name": "Softwareversion" },
             "heat_pump_type": { "name": "Wärmepumpentyp" },
             "bivalent_stage": { "name": "Bivalenzstufe" },
-            "runtime_wp_current": { "name": "Aktuelle Wärmepumpen-Laufzeit" },
-            "current_run_compressor1": { "name": "Verdichter 1 Laufzeit" }
+            "runtime_wp_current": { "name": "Aktuelle Wärmepumpen-Laufzeit" }
         },
         "binary_sensor": {
             "compressor_1": { "name": "Verdichter 1" },
@@ -74,7 +78,14 @@
             "motor_protection": { "name": "Motorschutz" }
         },
         "climate": {
-            "heating": { "name": "Heizung" }
+            "heating": {
+                "name": "Heizung",
+                "preset_modes": {
+                    "backup_heater": "Zweiter Wärmeerzeuger",
+                    "party": "Party",
+                    "holiday": "Ferien"
+                }
+            }
         },
         "water_heater": {
             "hot_water": { "name": "Warmwasser" }

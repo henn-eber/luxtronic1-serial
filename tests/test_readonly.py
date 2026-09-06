@@ -64,7 +64,7 @@ def test_send_raw_allows_reads_in_read_only_mode() -> None:
         transport = _FakeTransport()
         client = LuxtronikClient(transport, read_only=True)  # type: ignore[arg-type]
 
-        expected = ["1100", "1800", "2100", "3200", "3400", "3405", "3505", "2700"]
+        expected = ["1100", "1800", "2100", "3200", "3400", "3405", "3505"]
         for cmd in expected:
             await client.async_send_raw(cmd)
 

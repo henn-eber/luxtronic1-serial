@@ -137,11 +137,25 @@ SENSORS: tuple[LuxtronikSensorDescription, ...] = (
         value_fn=lambda c: c.overview.status.anl_status_text,
     ),
     LuxtronikSensorDescription(
-        key="compressor_hours",
-        translation_key="compressor_hours",
+        key="heat_pump_total_hours",
+        translation_key="heat_pump_total_hours",
         state_class=SensorStateClass.TOTAL_INCREASING,
         native_unit_of_measurement=UnitOfTime.HOURS,
         value_fn=lambda c: round(c.overview.hours.heat_pump_total / 3600, 1),
+    ),
+    LuxtronikSensorDescription(
+        key="compressor_1_hours",
+        translation_key="compressor_1_hours",
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        native_unit_of_measurement=UnitOfTime.HOURS,
+        value_fn=lambda c: round(c.overview.hours.compressor_1 / 3600, 1),
+    ),
+    LuxtronikSensorDescription(
+        key="compressor_2_hours",
+        translation_key="compressor_2_hours",
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        native_unit_of_measurement=UnitOfTime.HOURS,
+        value_fn=lambda c: round(c.overview.hours.compressor_2 / 3600, 1),
     ),
     LuxtronikSensorDescription(
         key="compressor_starts",
@@ -179,16 +193,6 @@ SENSORS: tuple[LuxtronikSensorDescription, ...] = (
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_class=SensorStateClass.MEASUREMENT,
         value_fn=lambda c: c.overview.runtimes.wp_seconds,
-    ),
-    LuxtronikSensorDescription(
-        key="current_run_compressor1",
-        translation_key="current_run_compressor1",
-        device_class=SensorDeviceClass.DURATION,
-        native_unit_of_measurement=UnitOfTime.SECONDS,
-        state_class=SensorStateClass.MEASUREMENT,
-        entity_category=EntityCategory.DIAGNOSTIC,
-        entity_registry_enabled_default=False,
-        value_fn=lambda c: c.overview.hours.compressor_1,
     ),
 )
 

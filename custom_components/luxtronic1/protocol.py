@@ -63,7 +63,7 @@ def encode_command(command: str, values: Iterable[int] | None = None) -> bytes:
         payload = command
     else:
         nums = [str(int(v)) for v in values]
-        payload = f"{command};{len(nums)};" + ".".join(nums).replace(".", ";")
+        payload = f"{command};{len(nums)};" + ";".join(nums)
     return payload.encode("ascii") + CRLF
 
 
@@ -137,3 +137,14 @@ def line_terminator_993(buffer: bytes) -> bool:
     """Return True if the controller has emitted ``993\\r\\n999``."""
 
     return b"993\r\n999" in buffer
+
+
+def has_error_marker(buffer: bytes) -> bool:
+    """Return True if the controller has signalled a desync with ``779``.
+
+    The marker can appear anywhere in the buffer. It is not a complete
+    frame, so it cannot be decoded by :func:`decode_line`; the transport
+    scans the byte stream directly.
+    """
+
+    return b"779" in buffer

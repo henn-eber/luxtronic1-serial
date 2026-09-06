@@ -85,12 +85,14 @@ The integration options contain a **read-only mode** switch, which is
   the write services (`set_heating_curve`, `set_hysteresis`,
   `set_bw_schedule`) are rejected, and `send_raw` only accepts pure
   read commands (`1100`, `1800`, `2100`, `3200`, `3400`, `3405`,
-  `3505`, `2700`).
+  `3505`).
 * To allow writes, disable read-only mode under **Settings → Devices &
   Services → Luxtronik 1 → Configure**. The entry reloads automatically.
 
 Enforcement happens in the protocol client itself, so no entity or
-service can bypass it.
+service can bypass it. The transport detects controller `779` (desync)
+responses and performs the standard abort (`0;0` + `999`) followed by a
+reconnect.
 
 ## Entities
 
@@ -114,12 +116,13 @@ service can bypass it.
 * EVU lockout, high / low pressure, motor protection inputs (problem sensors)
 
 ### Counters
-* Compressor total hours + starts
-* Current heat-pump run time (since last start)
 * Heat-pump total operating hours
+* Compressor 1 / 2 lifetime hours & starts
+* Current heat-pump run time (since last start)
 
 ### Climate (heating)
-* Modes: `Auto`, `Backup heater`, `Party`, `Holiday`, `Off`
+* HVAC modes: `Auto`, `Heat`, `Off`
+* Preset modes: `Backup heater`, `Party`, `Holiday`
 * Target = return setpoint (°C). Setting the target writes the heating
   curve's `Abweichung Rücklauf Soll` field.
 
@@ -191,3 +194,9 @@ HA modules).
 ## License
 
 MIT. See [`LICENSE`](LICENSE).
+
+## Credits
+
+Protocol reference and wire format based on
+[ioBroker.luxtronik1](https://github.com/iobroker-community-adapters/ioBroker.luxtronik1)
+by forelleblau and iobroker-community-adapters.

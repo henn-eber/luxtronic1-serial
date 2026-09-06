@@ -57,13 +57,14 @@
             "mix1_flow_setpoint": { "name": "Mixing circuit 1 flow setpoint" },
             "dhw_setpoint": { "name": "DHW setpoint" },
             "operating_state": { "name": "Operating state" },
-            "compressor_hours": { "name": "Compressor hours" },
+            "heat_pump_total_hours": { "name": "Heat pump total hours" },
+            "compressor_1_hours": { "name": "Compressor 1 hours" },
+            "compressor_2_hours": { "name": "Compressor 2 hours" },
             "compressor_starts": { "name": "Compressor starts" },
             "software_version": { "name": "Software version" },
             "heat_pump_type": { "name": "Heat pump type" },
             "bivalent_stage": { "name": "Bivalent stage" },
-            "runtime_wp_current": { "name": "Current heat pump run time" },
-            "current_run_compressor1": { "name": "Compressor 1 run time" }
+            "runtime_wp_current": { "name": "Current heat pump run time" }
         },
         "binary_sensor": {
             "compressor_1": { "name": "Compressor 1" },
@@ -78,7 +79,14 @@
             "motor_protection": { "name": "Motor protection" }
         },
         "climate": {
-            "heating": { "name": "Heating" }
+            "heating": {
+                "name": "Heating",
+                "preset_modes": {
+                    "backup_heater": "Backup heater",
+                    "party": "Party",
+                    "holiday": "Holiday"
+                }
+            }
         },
         "water_heater": {
             "hot_water": { "name": "Hot water" }

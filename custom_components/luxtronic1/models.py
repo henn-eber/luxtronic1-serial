@@ -501,27 +501,3 @@ class BWSchedule:
             self.end2_h,
             self.end2_m,
         ]
-
-
-@dataclass
-class Clock:
-    """2701 write payload (no 2700 read exists in ioBroker adapter)."""
-
-    day: int = 0
-    month: int = 0
-    year: int = 0  # two-digit
-    dow: int = 0  # 0=Mon ... 6=Sun
-    hour: int = 0
-    minute: int = 0
-    second: int = 0
-
-    def to_wire(self) -> list[int]:
-        return [
-            self.day,
-            self.month,
-            self.year,
-            self.dow,
-            self.hour,
-            self.minute,
-            self.second,
-        ]
