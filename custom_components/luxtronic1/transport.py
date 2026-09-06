@@ -243,7 +243,8 @@ class LuxtronikTransport:
         open_cmd = f"{command}\r\n".encode("ascii")
         payload = self._encode_payload(command, values)
         commit = b"999\r\n"
-        cancel = self._encode_payload(command, [0])
+        # Abort: <CMD>;0\r\n (count=0, no values) — matches ioBroker's abort
+        cancel = f"{command};0\r\n".encode("ascii")
 
         try:
             self._writer.write(open_cmd)
