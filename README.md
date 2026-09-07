@@ -1,4 +1,4 @@
-# Luxtronik 1 Heat Pump
+# Luxtronik 1 Heat Pump Controller Integration
 
 A Home Assistant integration for **AlphaInnotec** (and compatible Siemens /
 Novelan / etc.) heat pumps that use the **Luxtronik 1** controller without
