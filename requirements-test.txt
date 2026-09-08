@@ -1,6 +1,6 @@
 pytest==9.1.1
 pytest-cov==7.1.0
-pytest-asyncio==0.25.2
+pytest-asyncio==1.4.0
 pyserial==3.5
 pyserial-asyncio==0.6
 voluptuous==0.15.2

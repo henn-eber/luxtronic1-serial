@@ -226,7 +226,7 @@ class LuxtronikClient:
                 "to the controller and is blocked."
             )
         async with self._write_lock:
-            await self._transport.query(command)
+            return await self._transport.query(command)
 
     async def _respect_cooldown(self) -> None:
         elapsed = asyncio.get_running_loop().time() - self._last_write
