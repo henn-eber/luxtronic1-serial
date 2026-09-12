@@ -167,18 +167,34 @@ Set the two DHW time windows (HH:MM).
 
 ## Development
 
-Run the unit tests locally:
+### Requirements
+
+* **Python 3.14** (`homeassistant==2026.7.4` requires `>=3.14.2`)
+* Docker + Docker Compose 5.5+ (recommended) or local Python 3.14 venv
+* `pytest-homeassistant-custom-component==0.13.348` (matches HA 2026.7.4, via `requirements-test.txt:1`)
+
+### Running tests
+
+Via Docker (recommended — no host HA install needed):
 
 ```bash
-python -m pytest tests/ -v
+docker compose run --rm test           # full suite: 101 tests, 100% coverage
+docker compose run --rm test-emulator  # PTY + FakeLuxtronik HIL only
+docker compose run --rm shell          # interactive shell (python:3.14-slim)
 ```
 
-The tests only cover the protocol / data-model layer; they do **not** need
-Home Assistant or pyserial-asyncio installed (the `conftest.py` stubs the
-HA modules).
+Or locally with Python 3.14:
+
+```bash
+python3.14 -m pip install -r requirements-test.txt
+python -m pytest --cov=custom_components/luxtronic1 --cov-report=term-missing --cov-fail-under=95 -v
+```
+
+The tests now use the real Home Assistant harness `pytest-homeassistant-custom-component` (`tests/conftest.py:1` `pytest_plugins`, `auto_enable_custom_integrations`) rather than the former lightweight stubs. CI mirrors this: `.github/workflows/ci.yaml:29` `setup-python@v6` `python 3.14` + `pip install -r requirements-test.txt`.
 
 ## Compatibility notes
 
+* **Home Assistant 2026.7.4** (`homeassistant==2026.7.4` `manifest.json:11` `pyserial==3.5`/`pyserial-asyncio==0.6`) — integration runtime supports HA OS / Supervised / Container. Test harness pins `pytest-homeassistant-custom-component==0.13.348` (`2026.7.4` → `Python >=3.14.2`); see `requirements-test.txt:1` and `docker-compose.yml:3` `python:3.14-slim`.
 * Tested conceptually against the protocol documented by the
   [ioBroker.luxtronik1](https://github.com/iobroker-community-adapters/ioBroker.luxtronik1)
   project. Field indices match `setfehlertext` / `setabschalttext` /
