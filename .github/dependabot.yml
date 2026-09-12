@@ -22,8 +22,8 @@ updates:
           - "homeassistant"
           - "pytest-homeassistant-custom-component"
         update-types:
-          - "version-update:semver-minor"
-          - "version-update:semver-patch"
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "github-actions"
     directory: "/"
