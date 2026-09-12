@@ -1,6 +1,6 @@
-pytest==9.1.1
-pytest-cov==7.1.0
-pytest-asyncio==1.4.0
+homeassistant==2026.7.4
+pytest-homeassistant-custom-component==0.13.348
 pyserial==3.5
 pyserial-asyncio==0.6
-voluptuous==0.15.2
+# PHACC 0.13.348 pins HA 2026.7.4 (Python >=3.14.2) and brings:
+# pytest==9.0.3, pytest-cov, pytest-asyncio==1.4.0, etc.

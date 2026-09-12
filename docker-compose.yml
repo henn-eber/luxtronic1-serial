@@ -1,0 +1,29 @@
+services:
+  test:
+    image: python:3.14-slim
+    working_dir: /workspace
+    volumes:
+      - .:/workspace:cached
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+    command: bash -c "pip install -U pip && pip install -r requirements-test.txt && pytest --cov=custom_components/luxtronic1 --cov-report=term-missing --cov-fail-under=95 -v --tb=short"
+    # for interactive use: docker compose run --rm test bash
+
+  test-emulator:
+    image: python:3.14-slim
+    working_dir: /workspace
+    volumes:
+      - .:/workspace:cached
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+    command: bash -c "pip install -U pip && pip install -r requirements-test.txt && pytest tests/test_emulator_hil.py -v --tb=long"
+
+  # optional shell for dev
+  shell:
+    image: python:3.14-slim
+    working_dir: /workspace
+    volumes:
+      - .:/workspace:cached
+    command: sleep infinity

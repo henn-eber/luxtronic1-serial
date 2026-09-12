@@ -863,10 +863,26 @@ def test_config_flow_reconfigure():
 def test_options_flow():
     import asyncio
     from luxtronic1.config_flow import LuxtronikOptionsFlow
+    from luxtronic1.const import DOMAIN
+
     flow = LuxtronikOptionsFlow()
-    flow.hass = MagicMock()
-    flow.config_entry = MagicMock()
-    flow.config_entry.options = {"scan_interval": 300}
+    hass_mock = MagicMock()
+    mock_entry = MagicMock()
+    mock_entry.entry_id = "test-entry-id"
+    mock_entry.options = {"scan_interval": 300}
+    hass_mock.config_entries.async_get_known_entry = MagicMock(return_value=mock_entry)
+    flow.hass = hass_mock
+    flow.handler = DOMAIN  # type: ignore[attr-defined]
+    # _config_entry_id is derived from handler in real HA; set directly if needed
+    try:
+        flow._config_entry_id = mock_entry.entry_id  # type: ignore[attr-defined]
+    except Exception:
+        pass
+    # also try _config_entry for older stub path
+    try:
+        flow._config_entry = mock_entry  # type: ignore[attr-defined]
+    except Exception:
+        pass
     flow.add_suggested_values_to_schema = lambda schema, options: schema
     async def _run_none():
         res = await flow.async_step_init(None)
