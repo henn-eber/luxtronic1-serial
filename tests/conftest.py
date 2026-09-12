@@ -186,12 +186,20 @@ def _install_stubs() -> None:
         AddConfigEntryEntitiesCallback=object,
         AddEntitiesCallback=object,
     )
+    import voluptuous as _vol
+
     ha.helpers.config_validation = _make_fake_module(
         "homeassistant.helpers.config_validation",
         string=str,
+        config_entry_only_config_schema=_vol.Schema({}),
+        empty_config_schema=_vol.Schema({}),
+        platform_only_config_schema=_vol.Schema({}),
     )
     # compat: homeassistant.helpers.config_validation.string is used as validator; str works
     sys.modules["homeassistant.helpers.config_validation"].string = lambda x: str(x)
+    sys.modules["homeassistant.helpers.config_validation"].config_entry_only_config_schema = _vol.Schema({})
+    sys.modules["homeassistant.helpers.config_validation"].empty_config_schema = _vol.Schema({})
+    sys.modules["homeassistant.helpers.config_validation"].platform_only_config_schema = _vol.Schema({})
 
     # components package
     ha.components = types.ModuleType("homeassistant.components")
