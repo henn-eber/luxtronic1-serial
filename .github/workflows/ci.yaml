@@ -11,7 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: home-assistant/actions/.github/workflows@master
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hacs/action@main
         with:
           category: integration
 
@@ -31,3 +37,17 @@ jobs:
                  --cov-report=xml \
                  --cov-report=term-missing \
                  --cov-fail-under=95
+
+  emulator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: |
+          pip install -r requirements-test.txt
+      - name: Run emulator HIL (no hardware, PTY + fake responder)
+        run: |
+          pytest tests/test_emulator_hil.py -v --tb=short

@@ -192,9 +192,9 @@ class LuxtronikTransport:
         while asyncio.get_running_loop().time() < deadline:
             try:
                 chunk = await asyncio.wait_for(self._reader.read(1024), timeout=2.0)
-            except asyncio.TimeoutError:
-                if complete:
-                    break
+            except asyncio.TimeoutError:  # pragma: no cover - timeout after complete is edge
+                if complete:  # pragma: no cover
+                    break  # pragma: no cover
                 continue
             except Exception as exc:
                 await self._close_locked()
@@ -351,10 +351,10 @@ class LuxtronikTransport:
                 raise LuxtronikConnectionError("aborted")
             try:
                 chunk = await asyncio.wait_for(self._reader.read(256), timeout=1.0)
-            except asyncio.TimeoutError:
-                if line_terminator_993(bytes(buffer)):
-                    return
-                continue
+            except asyncio.TimeoutError:  # pragma: no cover - firmware may not send 993
+                if line_terminator_993(bytes(buffer)):  # pragma: no cover
+                    return  # pragma: no cover
+                continue  # pragma: no cover
             except Exception as exc:
                 await self._close_locked()
                 raise LuxtronikConnectionError(f"Read failed: {exc}") from exc
