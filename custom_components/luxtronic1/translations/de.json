@@ -79,12 +79,7 @@
         },
         "climate": {
             "heating": {
-                "name": "Heizung",
-                "preset_modes": {
-                    "backup_heater": "Zweiter Wärmeerzeuger",
-                    "party": "Party",
-                    "holiday": "Ferien"
-                }
+                "name": "Heizung"
             }
         },
         "water_heater": {

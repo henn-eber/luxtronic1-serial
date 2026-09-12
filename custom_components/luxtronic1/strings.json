@@ -80,12 +80,7 @@
         },
         "climate": {
             "heating": {
-                "name": "Heating",
-                "preset_modes": {
-                    "backup_heater": "Backup heater",
-                    "party": "Party",
-                    "holiday": "Holiday"
-                }
+                "name": "Heating"
             }
         },
         "water_heater": {

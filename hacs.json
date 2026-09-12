@@ -4,15 +4,5 @@
     "hide_default_branch": false,
     "homeassistant": "2024.6.0",
     "country": ["DE", "AT", "CH"],
-    "zip_release": true,
-    "zip_include": [
-        "custom_components/luxtronic1/**",
-        "README.md"
-    ],
-    "zip_exclude": [
-        "tests/**",
-        ".git/**",
-        ".github/**",
-        "hacs.json"
-    ]
+    "zip_release": true
 }
