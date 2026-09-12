@@ -32,12 +32,17 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements-test.txt
+          pip list | grep -E "pytest|coverage|voluptuous|serial"
+      - name: Debug collect
+        run: |
+          pytest --collect-only -q
+          python -c "import sys; print(sys.version)"
       - name: Run tests with coverage
         run: |
           pytest --cov=custom_components/luxtronic1 \
                  --cov-report=xml \
                  --cov-report=term-missing \
-                 --cov-fail-under=95 -v
+                 --cov-fail-under=95 -v --tb=short
 
   emulator:
     runs-on: ubuntu-latest
@@ -49,6 +54,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements-test.txt
+          pip list | grep -E "pytest|serial"
       - name: Run emulator HIL (no hardware, PTY + fake responder)
         run: |
-          pytest tests/test_emulator_hil.py -v --tb=short
+          pytest tests/test_emulator_hil.py -v --tb=long
+      - name: Debug PTY
+        if: always()
+        run: |
+          ls -l /dev/pts || true
+          python -c "import pty, os; fd, path = pty.openpty(); print(path); os.close(fd)"
