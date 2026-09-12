@@ -1,0 +1,37 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-name: "homeassistant"
+      - dependency-name: "pytest-homeassistant-custom-component"
+      - dependency-name: "pyserial*"
+      - dependency-name: "voluptuous"
+    labels:
+      - "dependencies"
+      - "pip"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    # Group HA + PHACC so they stay pinned together (HA 2026.7.4 -> PHACC 0.13.348)
+    groups:
+      ha-phacc:
+        patterns:
+          - "homeassistant"
+          - "pytest-homeassistant-custom-component"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"

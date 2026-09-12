@@ -45,6 +45,10 @@ def test_transport_read_until_complete_timeout_with_complete_true():
             call_idx += 1
             if call_idx == 1:
                 return await coro
+            try:
+                coro.close()
+            except Exception:
+                pass
             raise asyncio.TimeoutError()
         with patch("asyncio.wait_for", side_effect=fake_wait):
             res = await t._read_until_complete("1100", 1)
@@ -78,6 +82,11 @@ def test_transport_read_until_complete_timeout_with_complete_false():
             nonlocal call_idx
             call_idx += 1
             if call_idx == 2:
+                # Close coroutine to avoid RuntimeWarning: was never awaited
+                try:
+                    coro.close()
+                except Exception:
+                    pass
                 raise asyncio.TimeoutError()
             return await coro
         with patch("asyncio.wait_for", side_effect=fake_wait):
@@ -168,6 +177,10 @@ def test_transport_await_commit_timeout_with_terminator():
             call_idx += 1
             if call_idx == 1:
                 return await coro
+            try:
+                coro.close()
+            except Exception:
+                pass
             raise asyncio.TimeoutError()
         with patch("asyncio.wait_for", side_effect=fake_wait):
             await t._await_commit(None)
