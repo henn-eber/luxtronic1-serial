@@ -1,5 +1,5 @@
-homeassistant==2026.9.1
-pytest-homeassistant-custom-component==0.13.364
+homeassistant==2026.9.2
+pytest-homeassistant-custom-component==0.13.365
 pyserial==3.5
 pyserial-asyncio==0.6
 # PHACC 0.13.364 pins HA 2026.9.1 (Python >=3.14.2) and brings:
