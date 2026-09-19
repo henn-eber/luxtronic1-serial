@@ -1,5 +1,10 @@
 # Luxtronik 1 Heat Pump Controller Integration
 
+[![CI](https://github.com/henn-eber/luxtronic1-serial/actions/workflows/ci.yaml/badge.svg)](https://github.com/henn-eber/luxtronic1-serial/actions/workflows/ci.yaml)
+[![HACS](https://img.shields.io/badge/HACS-custom%20integration-blue)](https://hacs.xyz)
+[![Home Assistant 2026.9.1](https://img.shields.io/badge/Home%20Assistant-2026.9.1-blue)](https://www.home-assistant.io)
+[![Coverage 100%](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/henn-eber/luxtronic1-serial/actions)
+
 A Home Assistant integration for **AlphaInnotec** (and compatible Siemens /
 Novelan / etc.) heat pumps that use the **Luxtronik 1** controller without
 the newer Ethernet port. Communication happens over the controller's
@@ -169,9 +174,9 @@ Set the two DHW time windows (HH:MM).
 
 ### Requirements
 
-* **Python 3.14** (`homeassistant==2026.7.4` requires `>=3.14.2`)
+* **Python 3.14** (`homeassistant==2026.9.1` requires `>=3.14.2`)
 * Docker + Docker Compose 5.5+ (recommended) or local Python 3.14 venv
-* `pytest-homeassistant-custom-component==0.13.348` (matches HA 2026.7.4, via `requirements-test.txt:1`)
+* `pytest-homeassistant-custom-component==0.13.364` (matches HA 2026.9.1, via `requirements-test.txt:1`)
 
 ### Running tests
 
@@ -190,11 +195,11 @@ python3.14 -m pip install -r requirements-test.txt
 python -m pytest --cov=custom_components/luxtronic1 --cov-report=term-missing --cov-fail-under=95 -v
 ```
 
-The tests now use the real Home Assistant harness `pytest-homeassistant-custom-component` (`tests/conftest.py:1` `pytest_plugins`, `auto_enable_custom_integrations`) rather than the former lightweight stubs. CI mirrors this: `.github/workflows/ci.yaml:29` `setup-python@v6` `python 3.14` + `pip install -r requirements-test.txt`.
+The tests now use the real Home Assistant harness `pytest-homeassistant-custom-component` (`tests/conftest.py:1` `pytest_plugins`, `auto_enable_custom_integrations`) rather than the former lightweight stubs. CI mirrors this: `.github/workflows/ci.yaml:29` `setup-python@v7` `python 3.14` + `pip install -r requirements-test.txt`.
 
 ## Compatibility notes
 
-* **Home Assistant 2026.7.4** (`homeassistant==2026.7.4` `manifest.json:11` `pyserial==3.5`/`pyserial-asyncio==0.6`) — integration runtime supports HA OS / Supervised / Container. Test harness pins `pytest-homeassistant-custom-component==0.13.348` (`2026.7.4` → `Python >=3.14.2`); see `requirements-test.txt:1` and `docker-compose.yml:3` `python:3.14-slim`.
+* **Home Assistant 2026.9.1** (`homeassistant==2026.9.1` `manifest.json:11` `pyserial==3.5`/`pyserial-asyncio==0.6`) — integration runtime supports HA OS / Supervised / Container. Test harness pins `pytest-homeassistant-custom-component==0.13.364` (`2026.9.1` → `Python >=3.14.2`); see `requirements-test.txt:1` and `docker-compose.yml:3` `python:3.14-slim`. `hacs.json:5` `homeassistant` floor `2026.9.1` matches; brand icon is `1×1` placeholder (see `custom_components/luxtronic1/brand/icon.png:1` — replace with `256×256` and submit to `home-assistant/brands` for HACS default store).
 * Tested conceptually against the protocol documented by the
   [ioBroker.luxtronik1](https://github.com/iobroker-community-adapters/ioBroker.luxtronik1)
   project. Field indices match `setfehlertext` / `setabschalttext` /

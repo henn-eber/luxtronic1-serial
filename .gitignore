@@ -5,6 +5,11 @@ __pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
 
 # IDE
 .vscode/
