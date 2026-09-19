@@ -8,6 +8,7 @@
     "integration_type": "device",
     "iot_class": "local_polling",
     "issue_tracker": "https://github.com/henn-eber/luxtronic1-serial/issues",
+    "quality_scale": "gold",
     "requirements": ["pyserial==3.5", "pyserial-asyncio==0.6"],
     "version": "0.1.0"
 }
