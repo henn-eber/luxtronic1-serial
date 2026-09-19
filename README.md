@@ -1,5 +1,9 @@
 # Luxtronik 1 Heat Pump Controller Integration
 
+<p align="center">
+  <img src="AIT-logo-rs232.png" alt="Luxtronik 1 — Alpha-InnoTec with RS232" width="600">
+</p>
+
 [![CI](https://github.com/henn-eber/luxtronic1-serial/actions/workflows/ci.yaml/badge.svg)](https://github.com/henn-eber/luxtronic1-serial/actions/workflows/ci.yaml)
 [![HACS](https://img.shields.io/badge/HACS-custom%20integration-blue)](https://hacs.xyz)
 [![Home Assistant 2026.9.1](https://img.shields.io/badge/Home%20Assistant-2026.9.1-blue)](https://www.home-assistant.io)
@@ -199,7 +203,7 @@ The tests now use the real Home Assistant harness `pytest-homeassistant-custom-c
 
 ## Compatibility notes
 
-* **Home Assistant 2026.9.1** (`homeassistant==2026.9.1` `manifest.json:11` `pyserial==3.5`/`pyserial-asyncio==0.6`) — integration runtime supports HA OS / Supervised / Container. Test harness pins `pytest-homeassistant-custom-component==0.13.364` (`2026.9.1` → `Python >=3.14.2`); see `requirements-test.txt:1` and `docker-compose.yml:3` `python:3.14-slim`. `hacs.json:5` `homeassistant` floor `2026.9.1` matches; brand icon is `1×1` placeholder (see `custom_components/luxtronic1/brand/icon.png:1` — replace with `256×256` and submit to `home-assistant/brands` for HACS default store).
+* **Home Assistant 2026.9.1** (`homeassistant==2026.9.1` `manifest.json:11` `pyserial==3.5`/`pyserial-asyncio==0.6`) — integration runtime supports HA OS / Supervised / Container. Test harness pins `pytest-homeassistant-custom-component==0.13.364` (`2026.9.1` → `Python >=3.14.2`); see `requirements-test.txt:1` and `docker-compose.yml:3` `python:3.14-slim`. `hacs.json:5` `homeassistant` floor `2026.9.1` matches; brand icons `256×256`/`512×512` (`custom_components/luxtronic1/icon.png` + `logo.png` + `brand/`) generated from `AIT-logo-rs232.png:1` — submit to `home-assistant/brands` `custom_integrations/luxtronic1` for HACS default store.
 * Tested conceptually against the protocol documented by the
   [ioBroker.luxtronik1](https://github.com/iobroker-community-adapters/ioBroker.luxtronik1)
   project. Field indices match `setfehlertext` / `setabschalttext` /
